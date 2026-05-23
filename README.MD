@@ -124,7 +124,7 @@ public class CriticalLogic {
 ## Resource Encryption
 
 `NebulaResourceEncryption` is a stub class used to integrate resource encryption into your code. During obfuscation, 
-the obfuscator replaces the stub's implementation with an encrypted resource loader.
+the obfuscator replaces the stub's implementation with a decryption resource loader.
 
 Replace direct `getResourceAsStream` calls with the stub:
 
