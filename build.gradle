@@ -1,0 +1,21 @@
+plugins {
+    id "java"
+    id "io.github.goooler.shadow" version "8.1.8"
+}
+
+group = "dev.nebulaobf.obfuscator"
+version = "1.0"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    shadow(implementation("org.ow2.asm:asm:$object_asm"))
+    shadow(implementation("org.ow2.asm:asm-commons:$object_asm"))
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set("")
+}
