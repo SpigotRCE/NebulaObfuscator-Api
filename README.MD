@@ -6,8 +6,8 @@ A Java annotation-based API for controlling bytecode obfuscation behavior at the
 
 ## Overview
 
-The Nebula Obfuscator API gives you fine-grained control over how your code is obfuscated. By annotating classes, 
-methods, and fields, you can instruct the obfuscator to preserve names, keep signatures, inline methods, encrypt resources, or compile down to native code - without modifying any build configuration.
+The Nebula Obfuscator API gives you control over how your code is obfuscated. By annotating classes, 
+methods, and fields, you can instruct the obfuscator to preserve names, keep signatures, inline methods, encrypt resources, or compile down to native code.
 
 ---
 
