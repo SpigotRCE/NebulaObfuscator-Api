@@ -166,74 +166,38 @@ at compile/obfuscation time and don't need to be bundled.
  
 ```groovy
 plugins {
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+repositories {
+    mavenCentral()
+    ivy {
+        url = uri("https://github.com/SpigotRCE/NebulaObfuscator-Api/releases/download")
+        patternLayout {
+            artifact("[revision]/[artifact]-[revision].[ext]")
+        }
+        metadataSources {
+            artifact()
+        }
+    }
 }
  
 dependencies {
-    // Full jar on the compile classpath - gives you all annotations
-    compileOnly 'dev.nebulaobf.obfuscator:NebulaObfuscator-Api:1.0'
- 
-    // Resource package also needs to be resolvable at runtime pre-obfuscation
-    implementation 'dev.nebulaobf.obfuscator:NebulaObfuscator-Api:1.0'
+    shadow(implementation("dev.nebulaobf.api:NebulaObfuscator-Api:1.0"))
 }
  
 shadowJar {
-    // The annotation classes are compile-only and don't belong in the shaded output.
-    dependencies {
-        include(dependency('dev.nebulaobf.obfuscator:NebulaObfuscator-Api'))
-    }
-    exclude 'dev/nebulaobf/api/annotation/**'
-    exclude 'by/radioegor146/**'
-    exclude 'org/objectweb/asm/**'
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set("")
+    exclude "dev/nebulaobf/api/annotation/**"
+    exclude "by/radioegor146/**"
+    exclude "META-INF/**"
 }
+
+build.dependsOn shadowJar
 ```
- 
-### Maven (Shade Plugin)
- 
-```xml
-<dependencies>
-    <!-- Full jar on the compile classpath - gives you all annotations -->
-    <dependency>
-        <groupId>dev.nebulaobf.obfuscator</groupId>
-        <artifactId>NebulaObfuscator-Api</artifactId>
-        <version>1.0</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
- 
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.2</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals><goal>shade</goal></goals>
-                    <configuration>
-                        <artifactSet>
-                            <includes>
-                                <include>dev.nebulaobf:nebula-api</include>
-                            </includes>
-                        </artifactSet>
-                        <filters>
-                            <filter>
-                                <artifact>dev.nebulaobf.obfuscator:NebulaObfuscator-Api</artifact>
-                                <!-- Only bundle the resource package; exclude everything else -->
-                                <includes>
-                                    <include>dev/nebulaobf/api/resource/**</include>
-                                </includes>
-                            </filter>
-                        </filters>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
-```
- 
+
 ### Why only shade the resource package?
  
 | Package | Needed at compile time | Needs to be shaded |
